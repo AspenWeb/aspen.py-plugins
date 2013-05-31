@@ -24,12 +24,14 @@ setup( author = 'Chad Whitacre'
      , classifiers = classifiers
      , description = ('tornado plugin for Aspen')
      , name = 'aspen-tornado'
-     , entry_points = { 'aspen.renderers' : 'tornado=aspen_tornado' }
-     , py_modules = [ 'aspen_tornado' ]
+     , entry_points = { 'aspen.renderers' : 'tornado=aspen_tornado_renderer',
+                        'aspen.network_engines' : 'tornado=aspen_tornado_engine'
+                      }
+     , py_modules = [ 'aspen_tornado_renderer', 'aspen_tornado_engine' ]
      , url = 'http://aspen.io/'
      , version = '0.1'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
-                          , 'tornado'
+                          , 'tornado==1.2.1'
                            ]
       )
