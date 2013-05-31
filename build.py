@@ -5,7 +5,17 @@ from fabricate import main, run, shell, autoclean
 
 # Build
 # =====
-PLUGINS = [ 'aspen_pystache', 'aspen_tornado' ]
+PLUGINS = [ 'aspen_cherrypy' 
+          , 'aspen_eventlet'
+          , 'aspen_diesel' 
+          , 'aspen_gevent'
+          , 'aspen_jinja2'
+          , 'aspen_pants'
+          , 'aspen_pystache'
+          , 'aspen_rocket'
+          , 'aspen_tornado'
+          , 'aspen_twisted'
+          ]
 
 def _build(plugdir):
     print "Building " + plugdir
