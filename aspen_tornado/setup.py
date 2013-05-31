@@ -32,6 +32,6 @@ setup( author = 'Chad Whitacre'
      , version = '0.1'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
-                          , 'tornado==1.2.1'
+                          , 'tornado<2'
                            ]
       )
