@@ -17,10 +17,10 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_twisted'
           ]
 
-def __setup(plugdir, cmd, runner=run):
+def __setup(plugdir, cmd, runner=run, silent=True):
     env = os.environ
     env['PYTHONPATH'] = '.'
-    runner(main.options.python, os.path.join(plugdir, 'setup.py'), *cmd, env=env)
+    runner(main.options.python, os.path.join(plugdir, 'setup.py'), *cmd, env=env, silent=silent)
     
 def _build(plugdir):
     print "Building " + plugdir
@@ -43,7 +43,7 @@ def build():
 
 def _release(plugdir):
     print "Releasing " + plugdir
-    __setup(plugdir, ['sdist', '--formats=zip,gztar,bztar', 'upload'], runner=shell)
+    __setup(plugdir, ['sdist', '--formats=zip,gztar,bztar', 'upload'], runner=shell, silent=False)
 
 def release():
     for name in PLUGINS:
@@ -68,7 +68,7 @@ def show_targets():
     build - build all the plugins
     release_""" +
     ',\n    release_'.join(PLUGINS) + """ - release individual plugin
-    relese - release all plugins
+    release - release all plugins
     clean - remove all build artifacts
     clean_{build} - clean some build artifacts
     
