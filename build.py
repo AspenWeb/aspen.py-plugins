@@ -17,30 +17,37 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_twisted'
           ]
 
-def _build(plugdir):
-    print "Building " + plugdir
+def __setup(plugdir, cmd, runner=run):
     env = os.environ
     env['PYTHONPATH'] = '.'
-    run(main.options.python, os.path.join(plugdir, 'setup.py'), 'bdist_egg', env=env)
+    runner(main.options.python, os.path.join(plugdir, 'setup.py'), *cmd, env=env)
+    
+def _build(plugdir):
+    print "Building " + plugdir
+    __setup(plugdir, ['bdist_egg'])
+
+def _mkbuild(name):
+    def builder():
+        return _build(name)
+    return builder
 
 def _clean_build(plugdir):
     print "Cleaning " + plugdir
-    env = os.environ
-    env['PYTHONPATH'] = '.'
-    shell(main.options.python, os.path.join(plugdir, 'setup.py'), 'clean', '-a', env=env)
+    __setup(plugdir, ['clean', '-a'])
     shell('rm', '-rf', 'build', 'dist')
     shell('find', '.', '-name', '*.pyc', '-delete')
-
-# make a target for each plugin
-#PLUGIN_TARGS = dict([ (plugin, lambda: _build(plugin)) for plugin in PLUGINS ])
-#locals().update(PLUGIN_TARGS)
-
-aspen_pystache = lambda : _build('aspen_pystache')
-aspen_tornado = lambda : _build('aspen_tornado')
 
 def build():
     for name in PLUGINS:
         _build(name)
+
+def _release(plugdir):
+    print "Releasing " + plugdir
+    __setup(plugdir, ['sdist', '--formats=zip,gztar,bztar', 'upload'], runner=shell)
+
+def release():
+    for name in PLUGINS:
+        _release(name)
 
 def clean():
     autoclean()
@@ -53,7 +60,7 @@ def show_targets():
     show_targets (default) - this
     build - build all the plugins
     """ +
-    ', '.join(PLUGINS) + """ - build individual plugin
+    ',\n    '.join(PLUGINS) + """ - build individual plugin
     clean - remove all build artifacts
     clean_{build} - clean some build artifacts
     
@@ -64,4 +71,15 @@ extra_options = [
                  make_option('--python', action="store", dest="python", default="python"),
                 ]
 
+# make a target for each plugin
+def _mkbuild(name):
+    def builder():
+        return _build(name)
+    return builder
+PLUGIN_TARGS = dict([ (plugin, _mkbuild(plugin)) for plugin in PLUGINS ])
+
+# add all existing targets
+locals().update(PLUGIN_TARGS)
+
 main(extra_options=extra_options, default='show_targets')
+
