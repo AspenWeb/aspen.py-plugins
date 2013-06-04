@@ -26,9 +26,9 @@ setup( author = 'Chad Whitacre'
      , name = 'aspen-jinja2'
      , entry_points = { 'aspen.renderers' : 'jinja2=aspen_jinja2_renderer',
                       }
-     , py_modules = [ 'aspen_jinja2_renderer' ]
+     , py_modules = [ 'distribute_setup', 'aspen_jinja2_renderer' ]
      , url = 'http://aspen.io/'
-     , version = '0.1'
+     , version = '0.2'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'jinja2'

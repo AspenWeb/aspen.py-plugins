@@ -27,9 +27,9 @@ setup( author = 'Chad Whitacre'
      , entry_points = { 
                         'aspen.network_engines' : 'diesel=aspen_diesel_engine'
                       }
-     , py_modules = [ 'aspen_diesel_engine' ]
+     , py_modules = [ 'distribute_setup', 'aspen_diesel_engine' ]
      , url = 'http://aspen.io/'
-     , version = '0.1'
+     , version = '0.2'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'diesel'

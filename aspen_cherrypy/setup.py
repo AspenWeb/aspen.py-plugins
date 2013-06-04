@@ -27,9 +27,9 @@ setup( author = 'Chad Whitacre'
      , entry_points = { 
                         'aspen.network_engines' : 'cherrypy=aspen_cherrypy_engine'
                       }
-     , py_modules = [ 'aspen_cherrypy_engine' ]
+     , py_modules = [ 'distribute_setup', 'aspen_cherrypy_engine' ]
      , url = 'http://aspen.io/'
-     , version = '0.1'
+     , version = '0.2'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'cherrypy'

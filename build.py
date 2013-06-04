@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 from optparse import make_option
 from fabricate import main, run, shell, autoclean
 
@@ -18,9 +19,8 @@ PLUGINS = [ 'aspen_cherrypy'
           ]
 
 def __setup(plugdir, cmd, runner=run, silent=True):
-    env = os.environ
-    env['PYTHONPATH'] = '.'
-    runner(main.options.python, os.path.join(plugdir, 'setup.py'), *cmd, env=env, silent=silent)
+    shutil.copy('distribute_setup.py', plugdir)
+    runner(main.options.python, 'setup.py', *cmd, cwd=plugdir, silent=silent)
     
 def _build(plugdir):
     print "Building " + plugdir
@@ -34,7 +34,9 @@ def _mkbuild(name):
 def _clean_build(plugdir):
     print "Cleaning " + plugdir
     __setup(plugdir, ['clean', '-a'])
-    shell('rm', '-rf', 'build', 'dist', plugdir + '.egg-info')
+    files = [ 'build', 'dist', 'distribute_setup.py', plugdir + '.egg-info' ]
+    files = [ os.path.join(plugdir, f) for f in files ]
+    shell('rm', '-rf', *files, silent=False)
     shell('find', '.', '-name', '*.pyc', '-delete')
 
 def build():
@@ -63,8 +65,8 @@ def show_targets():
     print("""Valid targets:
 
     show_targets (default) - this
-    """ +
-    ',\n    '.join(PLUGINS) + """ - build individual plugin
+    build_""" +
+    ',\n    build_'.join(PLUGINS) + """ - build individual plugin
     build - build all the plugins
     release_""" +
     ',\n    release_'.join(PLUGINS) + """ - release individual plugin
@@ -80,7 +82,7 @@ extra_options = [
                 ]
 
 # make a target for each plugin
-PLUGIN_TARGS = dict([ (plugin, _mkbuild(plugin)) for plugin in PLUGINS ])
+PLUGIN_TARGS = dict([ ("build_" + plugin, _mkbuild(plugin)) for plugin in PLUGINS ])
 PLUGIN_TARGS.update(dict([ ("release_" + plugin, _mkrelease(plugin)) for plugin in PLUGINS ]))
 
 # add all existing targets

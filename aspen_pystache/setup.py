@@ -25,9 +25,9 @@ setup( author = 'Chad Whitacre'
      , description = ('pystache plugin for Aspen')
      , name = 'aspen-pystache'
      , entry_points = { 'aspen.renderers' : 'pystache=aspen_pystache' }
-     , py_modules = [ 'aspen_pystache' ]
+     , py_modules = [ 'distribute_setup', 'aspen_pystache' ]
      , url = 'http://aspen.io/'
-     , version = '0.1'
+     , version = '0.4'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'pystache'
