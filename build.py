@@ -34,7 +34,7 @@ def _mkbuild(name):
 def _clean_build(plugdir):
     print "Cleaning " + plugdir
     __setup(plugdir, ['clean', '-a'])
-    shell('rm', '-rf', 'build', 'dist')
+    shell('rm', '-rf', 'build', 'dist', plugdir + '.egg-info')
     shell('find', '.', '-name', '*.pyc', '-delete')
 
 def build():
