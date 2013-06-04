@@ -49,6 +49,11 @@ def release():
     for name in PLUGINS:
         _release(name)
 
+def _mkrelease(name):
+    def releaser():
+        return _release(name)
+    return releaser
+
 def clean():
     autoclean()
     for plugin in PLUGINS:
@@ -58,9 +63,12 @@ def show_targets():
     print("""Valid targets:
 
     show_targets (default) - this
-    build - build all the plugins
     """ +
     ',\n    '.join(PLUGINS) + """ - build individual plugin
+    build - build all the plugins
+    release_""" +
+    ',\n    release_'.join(PLUGINS) + """ - release individual plugin
+    relese - release all plugins
     clean - remove all build artifacts
     clean_{build} - clean some build artifacts
     
@@ -72,11 +80,8 @@ extra_options = [
                 ]
 
 # make a target for each plugin
-def _mkbuild(name):
-    def builder():
-        return _build(name)
-    return builder
 PLUGIN_TARGS = dict([ (plugin, _mkbuild(plugin)) for plugin in PLUGINS ])
+PLUGIN_TARGS.update(dict([ ("release_" + plugin, _mkrelease(plugin)) for plugin in PLUGINS ]))
 
 # add all existing targets
 locals().update(PLUGIN_TARGS)
