@@ -14,6 +14,7 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_pants'
           , 'aspen_pystache'
           , 'aspen_rocket'
+          , 'aspen_sentry'
           , 'aspen_tornado'
           , 'aspen_twisted'
           ]
