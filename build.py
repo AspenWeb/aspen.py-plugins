@@ -19,9 +19,11 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_twisted'
           ]
 
-def __setup(plugdir, cmd, runner=run, silent=True):
-    shutil.copy('distribute_setup.py', plugdir)
-    runner(main.options.python, 'setup.py', *cmd, cwd=plugdir, silent=silent)
+def __setup(plugdir, cmd, runner=run, silent=True, python=None):
+    if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')): 
+        shutil.copy('distribute_setup.py', plugdir)
+    py = python or main.options.python
+    runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
     
 def _build(plugdir):
     print "Building " + plugdir
@@ -62,6 +64,30 @@ def clean():
     for plugin in PLUGINS:
         _clean_build(plugin)
 
+def _virt(cmd, envdir='./env'):
+    return os.path.join(envdir, 'bin', cmd)
+
+def dev(envdir='./env'):
+    if os.path.exists(envdir): return
+    shell("virtualenv", envdir, silent=False)
+    for pkg in [ 'aspen', 'nose', 'coverage', 'nosexcover', 'snot' ]:
+        shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
+
+def clean_dev(envdir='./env'):
+    shell('rm', '-rf', './env', silent=False)
+
+def test(envdir='./env'):
+    dev(envdir=envdir)
+    #for pkg in [ 'cherrypy', 'eventlet', 'diesel', 'gevent', 'jinja2', 'pants',
+	#	    'pystache', 'rocket', 'tornado', 'twisted' ]:
+    #    shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
+    for plugin in PLUGINS:
+        print("Running develop %r..." % plugin)
+        __setup(plugin, ['develop'], silent=False, python=_virt('python'))
+    shell(_virt('nosetests'), '-s', 'tests/', ignore_status=True, silent=False)
+
+
+
 def show_targets():
     print("""Valid targets:
 
@@ -72,9 +98,12 @@ def show_targets():
     release_""" +
     ',\n    release_'.join(PLUGINS) + """ - release individual plugin
     release - release all plugins
+
+    dev - make a dev environment in the 'env' directory
+    test - build a test environment and run unit tests
+
     clean - remove all build artifacts
-    clean_{build} - clean some build artifacts
-    
+    clean_{build,dev} - clean some build artifacts
     """)
     sys.exit()
 
