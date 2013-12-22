@@ -19,12 +19,15 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_twisted'
           ]
 
+DEV_DEPS = [ 'aspen', 'nose', 'coverage', 'nosexcover', 'snot' ]
+
+
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
     if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')): 
         shutil.copy('distribute_setup.py', plugdir)
     py = python or main.options.python
     runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
-    
+   
 def _build(plugdir):
     print "Building " + plugdir
     __setup(plugdir, ['bdist_egg'])
@@ -63,6 +66,7 @@ def clean():
     autoclean()
     for plugin in PLUGINS:
         _clean_build(plugin)
+    clean_dev()
 
 def _virt(cmd, envdir='./env'):
     return os.path.join(envdir, 'bin', cmd)
@@ -70,7 +74,12 @@ def _virt(cmd, envdir='./env'):
 def dev(envdir='./env'):
     if os.path.exists(envdir): return
     shell("virtualenv", envdir, silent=False)
-    for pkg in [ 'aspen', 'nose', 'coverage', 'nosexcover', 'snot' ]:
+    for plugin in PLUGINS:
+        print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
+        if not os.path.exists(os.path.join(plugin, 'distribute_setup.py')): 
+            shutil.copy('distribute_setup.py', plugin)
+        shell(_virt('pip', envdir=envdir), 'install', '-e', './'+plugin, silent=False)
+    for pkg in DEV_DEPS:
         shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
 
 def clean_dev(envdir='./env'):
@@ -78,12 +87,6 @@ def clean_dev(envdir='./env'):
 
 def test(envdir='./env'):
     dev(envdir=envdir)
-    #for pkg in [ 'cherrypy', 'eventlet', 'diesel', 'gevent', 'jinja2', 'pants',
-	#	    'pystache', 'rocket', 'tornado', 'twisted' ]:
-    #    shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
-    for plugin in PLUGINS:
-        print("Running develop %r..." % plugin)
-        __setup(plugin, ['develop'], silent=False, python=_virt('python'))
     shell(_virt('nosetests'), '-s', 'tests/', ignore_status=True, silent=False)
 
 
