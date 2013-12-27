@@ -19,7 +19,7 @@ PLUGINS = [ 'aspen_cherrypy'
           , 'aspen_twisted'
           ]
 
-DEV_DEPS = [ 'aspen', 'nose', 'coverage', 'nosexcover', 'snot' ]
+DEV_DEPS = [ 'aspen', 'pytest', 'pytest-cov' ]
 
 
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
@@ -87,9 +87,7 @@ def clean_dev(envdir='./env'):
 
 def test(envdir='./env'):
     dev(envdir=envdir)
-    shell(_virt('nosetests'), '-s', 'tests/', ignore_status=True, silent=False)
-
-
+    shell(_virt('py.test', envdir=envdir), 'tests/', ignore_status=True, silent=False)
 
 def show_targets():
     print("""Valid targets:

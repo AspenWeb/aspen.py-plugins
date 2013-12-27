@@ -1,7 +1,7 @@
 import pants
 from aspen.network_engines import CooperativeEngine
-from pants.contrib.http import HTTPServer
-from pants.contrib.wsgi import WSGIConnector
+from pants.http import HTTPServer
+from pants.web import WSGIConnector
 
 
 class Engine(CooperativeEngine):

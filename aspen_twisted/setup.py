@@ -24,11 +24,11 @@ setup( author = 'Chad Whitacre'
      , description = ('twisted plugin for Aspen')
      , name = 'aspen-twisted'
      , entry_points = { 
-                        'aspen.network_engines' : 'twisted=aspen_twisted_engine'
+                        'aspen.network_engines' : 'twisted=aspen_twisted'
                       }
-     , py_modules = [ 'distribute_setup', 'aspen_twisted_engine' ]
+     , py_modules = [ 'distribute_setup', 'aspen_twisted' ]
      , url = 'http://aspen.io/'
-     , version = '0.2'
+     , version = '0.3'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'twisted'
