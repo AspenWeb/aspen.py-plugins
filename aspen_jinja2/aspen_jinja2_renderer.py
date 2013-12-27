@@ -29,6 +29,31 @@ class SimplateLoader(BaseLoader):
 
 
 class Renderer(renderers.Renderer):
+    """Renderer for jinja2 templates.
+
+    Jinja2 is sandboxed, so only gets the context from simplate, not even
+    access to python builtins.  Put any global functions or variables you
+    want access to in your template into the 'global_context' here to have
+    it passed along, augmented, of course, by the actual local context.
+
+    For instance, if you want access to some python builtins, you might, in
+    your configure-aspen.py put something like:
+
+    website.renderer_factories['jinja2'].Renderer.global_context = {
+            'range': range,
+            'unicode': unicode,
+            'enumerate': enumerate,
+            'len': len,
+            'float': float,
+            'type': type
+    }
+
+    Clearly, by doing so, you're overriding jinja's explicit decision to not
+    include those things by default, which may be fraught - but that's up to
+    you.
+
+    """
+    global_context = {}
 
     def compile(self, filepath, raw):
         environment = self.meta
@@ -36,6 +61,8 @@ class Renderer(renderers.Renderer):
 
     def render_content(self, context):
         charset = context['response'].charset
+        # Inject globally-desired context
+        context.update(self.global_context)
         return self.compiled.render(context).encode(charset)
 
 
@@ -49,3 +76,4 @@ class Factory(renderers.Factory):
             # Instantiate a loader that will be used to resolve template bases.
             loader = FileSystemLoader(configuration.project_root)
         return Environment(loader=loader)
+
