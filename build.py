@@ -21,6 +21,7 @@ PLUGINS = [ 'aspen_cherrypy'
 
 DEV_DEPS = [ 'aspen', 'pytest', 'pytest-cov' ]
 
+VIRTUALENV="virtualenv-1.7.1.2.py"
 
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
     if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')): 
@@ -73,7 +74,8 @@ def _virt(cmd, envdir='./env'):
 
 def dev(envdir='./env'):
     if os.path.exists(envdir): return
-    shell("virtualenv", envdir, silent=False)
+    py = main.options.python
+    shell(py, "./vendor/" + VIRTUALENV, envdir, silent=False)
     for plugin in PLUGINS:
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
         if not os.path.exists(os.path.join(plugin, 'distribute_setup.py')): 
