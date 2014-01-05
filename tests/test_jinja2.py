@@ -25,7 +25,7 @@ def test_global_context_jinja2_template(harness):
     }
     """
     SIMPLATE = """
-    longDict = {1,2,3}
+    longDict = set([1,2,3])
     [----] via jinja2
     len: {{ len(longDict) }}
     """
