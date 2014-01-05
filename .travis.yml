@@ -4,7 +4,6 @@ python:
   - 2.7
 install:
   - python build.py dev
-  - ./env/pip install --use-mirrors simplejson coverage
 script: python build.py analyse
 notifications:
   email: false
