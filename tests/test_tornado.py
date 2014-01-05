@@ -1,5 +1,6 @@
 
 import os
+import sys
 
 #from aspen.configuration import Configurable
 #from aspen.testing import assert_raises, attach_teardown, fix, FSFIX, mk
@@ -10,6 +11,7 @@ import os
 def assert_body(harness, uripath, expected_body):
     actual = harness.simple(filepath=None, uripath=uripath, want='response.body')
     assert actual == expected_body
+
 
 def test_basic_tornado_template(harness):
     CONFIG = """
@@ -24,6 +26,16 @@ def test_basic_tornado_template(harness):
     harness.fs.www.mk(('index.html.spt', SIMPLATE),)
     assert_body(harness, '/', 'Greetings, program!\n')
 
+
+def test_tornado_can_load_bases(harness):
+    harness.fs.project.mk(("base.html", "{% block foo %}{% end %} Blam."))
+    SIMPLATE = """
+                  [----] via tornado
+                  {% extends base.html %}
+                  {% block foo %}Some bytes!{% end %}"""
+    harness.fs.www.mk(('index.html.spt', SIMPLATE),)
+    assert_body(harness, '/', 'Some bytes! Blam.')
+
 '''
 
 def test_tornado_base_failure_fails():
@@ -35,16 +47,6 @@ def test_tornado_base_failure_fails():
                  , "{% extends base.html %}"
                    "{% block foo %}Some bytes!{% end %}"
                   )
-
-def test_tornado_can_load_bases():
-    mk(("base.html", "{% block foo %}{% end %} Blam."))
-    make_renderer = tornado_factory_factory(["--project_root", FSFIX])
-    render = make_renderer( "<string>"
-                          , "{% extends base.html %}"
-                            "{% block foo %}Some bytes!{% end %}"
-                           )
-    actual = render({})
-    assert actual == "Some bytes! Blam.", actual
 
 def test_tornado_caches_by_default_after_make_renderer():
     mk(("base.html", "{% block foo %}{% end %} Blam."))
@@ -123,3 +125,4 @@ def test_tornado_loader_shim_resolves_path_from_absolute_nested_parent_path():
     assert actual == "Resolved.", actual
 
 '''
+
