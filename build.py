@@ -98,6 +98,16 @@ def test(envdir='./env'):
     dev(envdir=envdir)
     shell(_virt('py.test', envdir=envdir), 'tests/', ignore_status=True, silent=False)
 
+def analyse(envdir='./env'):
+    dev(envdir=envdir)
+    run(_virt('py.test'),
+        '--junitxml=testresults.xml',
+        '--cov-report', 'term',
+        '--cov-report', 'xml',
+        '--cov', 'aspen',
+        'tests/',
+        ignore_status=False)
+
 def show_targets():
     print("""Valid targets:
 
