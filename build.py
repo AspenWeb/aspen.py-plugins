@@ -31,8 +31,8 @@ ENV_ARGS = [
            ]
 
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
-    if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')): 
-        shutil.copy('distribute_setup.py', plugdir)
+    if not os.path.exists(os.path.join(plugdir, 'ez_setup.py')): 
+        shutil.copy('ez_setup.py', plugdir)
     py = python or main.options.python
     runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
    
@@ -48,7 +48,7 @@ def _mkbuild(name):
 def _clean_build(plugdir):
     print "Cleaning " + plugdir
     __setup(plugdir, ['clean', '-a'])
-    files = [ 'build', 'dist', 'distribute_setup.py', plugdir + '.egg-info' ]
+    files = [ 'build', 'dist', 'ez_setup.py', plugdir + '.egg-info' ]
     files = [ os.path.join(plugdir, f) for f in files ]
     shell('rm', '-rf', *files, silent=False)
     shell('find', '.', '-name', '*.pyc', '-delete')
@@ -85,8 +85,8 @@ def dev(envdir='./env'):
     shell(*args, silent=False)
     for plugin in PLUGINS:
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
-        if not os.path.exists(os.path.join(plugin, 'distribute_setup.py')): 
-            shutil.copy('distribute_setup.py', plugin)
+        if not os.path.exists(os.path.join(plugin, 'ez_setup.py')):
+            shutil.copy('ez_setup.py', plugin)
         shell(_virt('pip', envdir=envdir), 'install', '-e', './'+plugin, silent=False)
     for pkg in DEV_DEPS:
         shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)

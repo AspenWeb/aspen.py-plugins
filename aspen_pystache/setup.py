@@ -1,5 +1,8 @@
-from distribute_setup import use_setuptools
-use_setuptools()
+try:
+    import setuptools  # noqa
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
 
 from setuptools import setup
 
@@ -24,7 +27,7 @@ setup( author = 'Chad Whitacre'
      , description = ('pystache plugin for Aspen')
      , name = 'aspen-pystache'
      , entry_points = { 'aspen.renderers' : 'pystache=aspen_pystache' }
-     , py_modules = [ 'distribute_setup', 'aspen_pystache' ]
+     , py_modules = [ 'ez_setup', 'aspen_pystache' ]
      , url = 'http://aspen.io/'
      , version = '0.4'
      , zip_safe = False
