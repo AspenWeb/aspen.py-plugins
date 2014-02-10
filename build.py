@@ -22,11 +22,8 @@ PLUGINS = [ 'aspen_cherrypy'
 DEV_DEPS = [ 'aspen', 'pytest', 'pytest-cov' ]
 
 ENV_ARGS = [
-           './vendor/virtualenv-1.7.1.2.py',
-           '--distribute',
-           '--unzip-setuptools',
+           './vendor/virtualenv-1.11.2.py',
            '--prompt=[aspen-plugins]',
-#           '--never-download',
            '--extra-search-dir=./vendor/',
            ]
 
@@ -87,9 +84,11 @@ def dev(envdir='./env'):
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
         if not os.path.exists(os.path.join(plugin, 'ez_setup.py')):
             shutil.copy('ez_setup.py', plugin)
-        shell(_virt('pip', envdir=envdir), 'install', '-e', './'+plugin, silent=False)
+        shell(_virt('pip', envdir=envdir),
+              'install', '-e', './'+plugin, '--find-links=./vendor', silent=False)
     for pkg in DEV_DEPS:
-        shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
+        shell(_virt('pip', envdir=envdir),
+              'install', pkg, silent=False)
 
 def clean_dev(envdir='./env'):
     shell('rm', '-rf', './env', silent=False)
