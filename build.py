@@ -84,6 +84,7 @@ def dev(envdir='./env'):
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
         if not os.path.exists(os.path.join(plugin, 'ez_setup.py')):
             shutil.copy('ez_setup.py', plugin)
+        # --find-links added for Cheroot which is current not hosted in PyPI
         shell(_virt('pip', envdir=envdir),
               'install', '-e', './'+plugin, '--find-links=./vendor', silent=False)
     for pkg in DEV_DEPS:
