@@ -1,5 +1,8 @@
-from distribute_setup import use_setuptools
-use_setuptools()
+try:
+    import setuptools  # noqa
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
 
 from setuptools import setup
 
@@ -26,7 +29,7 @@ setup( author = 'Chad Whitacre'
      , entry_points = { 
                         'aspen.network_engines' : 'twisted=aspen_twisted'
                       }
-     , py_modules = [ 'distribute_setup', 'aspen_twisted' ]
+     , py_modules = [ 'ez_setup', 'aspen_twisted' ]
      , url = 'http://aspen.io/'
      , version = '0.3'
      , zip_safe = False

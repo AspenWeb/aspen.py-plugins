@@ -1,5 +1,8 @@
-from distribute_setup import use_setuptools
-use_setuptools()
+try:
+    import setuptools  # noqa
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
 
 from setuptools import setup
 
@@ -26,7 +29,7 @@ setup( author = 'Chad Whitacre'
      , entry_points = { 
                         'aspen.network_engines' : 'gevent=aspen_gevent_engine'
                       }
-     , py_modules = [ 'distribute_setup', 'aspen_gevent_engine' ]
+     , py_modules = [ 'ez_setup', 'aspen_gevent_engine' ]
      , url = 'http://aspen.io/'
      , version = '0.2'
      , zip_safe = False

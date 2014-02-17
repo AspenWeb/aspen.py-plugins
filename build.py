@@ -22,17 +22,14 @@ PLUGINS = [ 'aspen_cherrypy'
 DEV_DEPS = [ 'aspen', 'pytest', 'pytest-cov' ]
 
 ENV_ARGS = [
-           './vendor/virtualenv-1.7.1.2.py',
-           '--distribute',
-           '--unzip-setuptools',
+           './vendor/virtualenv-1.11.2.py',
            '--prompt=[aspen-plugins]',
-#           '--never-download',
            '--extra-search-dir=./vendor/',
            ]
 
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
-    if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')): 
-        shutil.copy('distribute_setup.py', plugdir)
+    if not os.path.exists(os.path.join(plugdir, 'ez_setup.py')): 
+        shutil.copy('ez_setup.py', plugdir)
     py = python or main.options.python
     runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
    
@@ -48,7 +45,7 @@ def _mkbuild(name):
 def _clean_build(plugdir):
     print "Cleaning " + plugdir
     __setup(plugdir, ['clean', '-a'])
-    files = [ 'build', 'dist', 'distribute_setup.py', plugdir + '.egg-info' ]
+    files = [ 'build', 'dist', 'ez_setup.py', plugdir + '.egg-info' ]
     files = [ os.path.join(plugdir, f) for f in files ]
     shell('rm', '-rf', *files, silent=False)
     shell('find', '.', '-name', '*.pyc', '-delete')
@@ -85,11 +82,14 @@ def dev(envdir='./env'):
     shell(*args, silent=False)
     for plugin in PLUGINS:
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
-        if not os.path.exists(os.path.join(plugin, 'distribute_setup.py')): 
-            shutil.copy('distribute_setup.py', plugin)
-        shell(_virt('pip', envdir=envdir), 'install', '-e', './'+plugin, silent=False)
+        if not os.path.exists(os.path.join(plugin, 'ez_setup.py')):
+            shutil.copy('ez_setup.py', plugin)
+        # --find-links added for Cheroot which is current not hosted in PyPI
+        shell(_virt('pip', envdir=envdir),
+              'install', '-e', './'+plugin, '--find-links=./vendor', silent=False)
     for pkg in DEV_DEPS:
-        shell(_virt('pip', envdir=envdir), 'install', pkg, silent=False)
+        shell(_virt('pip', envdir=envdir),
+              'install', pkg, silent=False)
 
 def clean_dev(envdir='./env'):
     shell('rm', '-rf', './env', silent=False)
