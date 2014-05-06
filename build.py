@@ -6,17 +6,11 @@ from fabricate import main, run, shell, autoclean
 
 # Build
 # =====
-PLUGINS = [ 'aspen_cherrypy' 
-          , 'aspen_eventlet'
-          , 'aspen_diesel' 
-          , 'aspen_gevent'
-          , 'aspen_jinja2'
-          , 'aspen_pants'
+PLUGINS = [ 'aspen_jinja2'
           , 'aspen_pystache'
-          , 'aspen_rocket'
           , 'aspen_sentry'
           , 'aspen_tornado'
-          , 'aspen_twisted'
+          , 'aspen_tree'
           ]
 
 DEV_DEPS = [ 'aspen', 'pytest', 'pytest-cov' ]
@@ -28,11 +22,16 @@ ENV_ARGS = [
            ]
 
 def __setup(plugdir, cmd, runner=run, silent=True, python=None):
+<<<<<<< HEAD
     if not os.path.exists(os.path.join(plugdir, 'ez_setup.py')): 
         shutil.copy('ez_setup.py', plugdir)
+=======
+    if not os.path.exists(os.path.join(plugdir, 'distribute_setup.py')):
+        shutil.copy('distribute_setup.py', plugdir)
+>>>>>>> Prune network_engine plugins
     py = python or main.options.python
     runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
-   
+
 def _build(plugdir):
     print "Building " + plugdir
     __setup(plugdir, ['bdist_egg'])
@@ -82,11 +81,17 @@ def dev(envdir='./env'):
     shell(*args, silent=False)
     for plugin in PLUGINS:
         print("Running %s install -e %s..." % (_virt('pip', envdir=envdir), plugin))
+<<<<<<< HEAD
         if not os.path.exists(os.path.join(plugin, 'ez_setup.py')):
             shutil.copy('ez_setup.py', plugin)
         # --find-links added for Cheroot which is current not hosted in PyPI
         shell(_virt('pip', envdir=envdir),
               'install', '-e', './'+plugin, '--find-links=./vendor', silent=False)
+=======
+        if not os.path.exists(os.path.join(plugin, 'distribute_setup.py')):
+            shutil.copy('distribute_setup.py', plugin)
+        shell(_virt('pip', envdir=envdir), 'install', '-e', './'+plugin, silent=False)
+>>>>>>> Prune network_engine plugins
     for pkg in DEV_DEPS:
         shell(_virt('pip', envdir=envdir),
               'install', pkg, silent=False)
