@@ -7,7 +7,7 @@ loader that returns the decoded content page and instructs Jinja2 not to
 perform auto-reloading.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from aspen import renderers
 
 from jinja2 import BaseLoader, Environment, FileSystemLoader
@@ -22,7 +22,7 @@ class SimplateLoader(BaseLoader):
 
     def __init__(self, filepath, raw):
         self.filepath = filepath
-        self.decoded = raw.decode('UTF-8')
+        self.decoded = raw
 
     def get_source(self, environment, template):
         return self.decoded, self.filepath, True
