@@ -1,3 +1,5 @@
+from __future__ import division, print_function, unicode_literals
+
 import os
 import sys
 import shutil
@@ -28,7 +30,7 @@ def __setup(plugdir, cmd, runner=run, silent=True, python=None):
     runner(py, 'setup.py', *cmd, cwd=plugdir, silent=silent)
 
 def _build(plugdir):
-    print "Building " + plugdir
+    print("Building " + plugdir)
     __setup(plugdir, ['bdist_egg'])
 
 def _mkbuild(name):
@@ -37,7 +39,7 @@ def _mkbuild(name):
     return builder
 
 def _clean_build(plugdir):
-    print "Cleaning " + plugdir
+    print("Cleaning " + plugdir)
     __setup(plugdir, ['clean', '-a'])
     files = [ 'build', 'dist', 'ez_setup.py', plugdir + '.egg-info' ]
     files = [ os.path.join(plugdir, f) for f in files ]
@@ -49,7 +51,7 @@ def build():
         _build(name)
 
 def _release(plugdir):
-    print "Releasing " + plugdir
+    print("Releasing " + plugdir)
     __setup(plugdir, ['sdist', '--formats=zip,gztar,bztar', 'upload'], runner=shell, silent=False)
 
 def release():
