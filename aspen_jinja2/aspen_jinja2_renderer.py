@@ -36,8 +36,7 @@ class Renderer(renderers.Renderer):
     want access to in your template into the 'global_context' here to have
     it passed along, augmented, of course, by the actual local context.
 
-    For instance, if you want access to some python builtins, you might, in
-    your configure-aspen.py put something like:
+    For instance, if you want access to some python builtins, you might do:
 
     website.renderer_factories['jinja2'].Renderer.global_context = {
             'range': range,

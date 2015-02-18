@@ -14,15 +14,12 @@ def assert_body(harness, uripath, expected_body):
 
 
 def test_basic_tornado_template(harness):
-    CONFIG = """
-    website.renderer_default="stdlib_format"
-    """
     SIMPLATE = """
     name="program"
     [----] via tornado
     Greetings, {{name}}!
     """
-    harness.fs.project.mk(('configure-aspen.py', CONFIG),)
+    harness.client.website.renderer_default = 'stdlib_format'
     harness.fs.www.mk(('index.html.spt', SIMPLATE),)
     assert_body(harness, '/', 'Greetings, program!\n')
 
