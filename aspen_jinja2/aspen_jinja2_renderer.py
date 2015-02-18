@@ -40,18 +40,26 @@ class Renderer(renderers.Renderer):
 
     For instance, if you want access to some python builtins, you might do:
 
-    website.renderer_factories['jinja2'].Renderer.global_context = {
+        website.renderer_factories['jinja2'].Renderer.global_context = {
             'range': range,
             'unicode': unicode,
             'enumerate': enumerate,
             'len': len,
             'float': float,
             'type': type
-    }
+        }
 
     Clearly, by doing so, you're overriding jinja's explicit decision to not
     include those things by default, which may be fraught - but that's up to
     you.
+
+    By default Jinja's `autoescape` is turned off, you can enable it by setting
+
+        website.renderer_factories['jinja2'].Renderer.autoescape = True
+
+    This will only turn on Jinja's autoescape when rendering an HTML or XML
+    page (precisely, any media type that matches the `Renderer.sgml_type_re`
+    regular expression).
 
     """
     autoescape = False
