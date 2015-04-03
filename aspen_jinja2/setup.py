@@ -32,7 +32,7 @@ setup( author = 'Chad Whitacre'
      , url = 'http://aspen.io/'
      , version = '0.4'
      , zip_safe = False
-     , install_requires = [ 'aspen>=0.23'
+     , install_requires = [ 'aspen>=0.37'
                           , 'jinja2'
                            ]
       )

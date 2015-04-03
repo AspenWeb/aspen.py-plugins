@@ -8,8 +8,10 @@ perform auto-reloading.
 
 """
 from __future__ import absolute_import, unicode_literals
-from aspen import renderers
 
+import re
+
+from aspen import renderers
 from jinja2 import BaseLoader, Environment, FileSystemLoader
 
 
@@ -38,24 +40,38 @@ class Renderer(renderers.Renderer):
 
     For instance, if you want access to some python builtins, you might do:
 
-    website.renderer_factories['jinja2'].Renderer.global_context = {
+        website.renderer_factories['jinja2'].Renderer.global_context = {
             'range': range,
             'unicode': unicode,
             'enumerate': enumerate,
             'len': len,
             'float': float,
             'type': type
-    }
+        }
 
     Clearly, by doing so, you're overriding jinja's explicit decision to not
     include those things by default, which may be fraught - but that's up to
     you.
 
+    By default Jinja's `autoescape` is turned off, you can enable it by setting
+
+        website.renderer_factories['jinja2'].Renderer.autoescape = True
+
+    This will only turn on Jinja's autoescape when rendering an HTML or XML
+    page (precisely, any media type that matches the `Renderer.sgml_type_re`
+    regular expression).
+
     """
+    autoescape = False
     global_context = {}
+    sgml_type_re = re.compile(r'\b(ht|sg|x)ml\b')
 
     def compile(self, filepath, raw):
-        environment = self.meta
+        self.is_sgml = bool(self.sgml_type_re.search(self.media_type))
+        if self.autoescape and self.is_sgml:
+            environment = self.meta['htmlescaped_env']
+        else:
+            environment = self.meta['default_env']
         return SimplateLoader(filepath, raw).load(environment, filepath)
 
     def render_content(self, context):
@@ -74,5 +90,8 @@ class Factory(renderers.Factory):
         if configuration.project_root is not None:
             # Instantiate a loader that will be used to resolve template bases.
             loader = FileSystemLoader(configuration.project_root)
-        return Environment(loader=loader)
+        return {
+            'default_env': Environment(loader=loader),
+            'htmlescaped_env': Environment(loader=loader, autoescape=True),
+        }
 
