@@ -1,10 +1,9 @@
 """Implement a Jinja2 renderer.
 
 Jinja2 insists on unicode, and explicit loader objects. We assume with Jinja2
-that your templates on the filesystem be encoded in UTF-8 (the result of the
-template will be encoded to bytes for the wire per response.charset). We shim a
-loader that returns the decoded content page and instructs Jinja2 not to
-perform auto-reloading.
+that your templates on the filesystem are encoded in UTF-8. We shim a loader
+that returns the decoded content page and instructs Jinja2 not to perform
+auto-reloading.
 
 """
 from __future__ import absolute_import, unicode_literals
@@ -75,10 +74,9 @@ class Renderer(renderers.Renderer):
         return SimplateLoader(filepath, raw).load(environment, filepath)
 
     def render_content(self, context):
-        charset = context['response'].charset
         # Inject globally-desired context
         context.update(self.global_context)
-        return self.compiled.render(context).encode(charset)
+        return self.compiled.render(context)
 
 
 class Factory(renderers.Factory):

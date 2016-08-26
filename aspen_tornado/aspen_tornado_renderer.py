@@ -11,7 +11,8 @@ class Renderer(renderers.Renderer):
         return Template(raw, filepath, loader, compress_whitespace=False)
 
     def render_content(self, context):
-        return self.compiled.generate(**context)
+        # tornado seems to always return utf8
+        return self.compiled.generate(**context).decode('utf8')
 
 
 class Factory(renderers.Factory):

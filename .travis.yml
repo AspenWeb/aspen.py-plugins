@@ -1,13 +1,14 @@
+sudo: false
+branches:
+  only:
+    - master
 language: python
-python:
-  - 2.6
-  - 2.7
-install:
-  - python build.py dev
-script: python build.py analyse
+python: "3.5"
+install: pip install tox
+script: tox
 notifications:
   email: false
-  irc: 
+  irc:
     channels:
       - "irc.freenode.org#aspen"
     on_success: change

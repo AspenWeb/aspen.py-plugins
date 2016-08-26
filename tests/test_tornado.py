@@ -9,7 +9,8 @@ import sys
 
 
 def assert_body(harness, uripath, expected_body):
-    actual = harness.simple(filepath=None, uripath=uripath, want='response.body')
+    actual = harness.simple(filepath=None, uripath=uripath, want='output.body',
+                            return_after='render_resource')
     assert actual == expected_body
 
 
@@ -19,9 +20,20 @@ def test_basic_tornado_template(harness):
     [----] via tornado
     Greetings, {{name}}!
     """
-    harness.client.website.renderer_default = 'stdlib_format'
+    harness.request_processor.renderer_default = 'stdlib_format'
     harness.fs.www.mk(('index.html.spt', SIMPLATE),)
     assert_body(harness, '/', 'Greetings, program!\n')
+
+
+def test_unicode_tornado_template(harness):
+    SIMPLATE = u"""
+    # coding: latin9
+    [----] via tornado
+    \u20ac
+    """
+    harness.request_processor.renderer_default = 'stdlib_format'
+    harness.fs.www.mk(('index.html.spt', SIMPLATE, True, 'latin9'),)
+    assert_body(harness, '/', u'\u20ac\n')
 
 
 def test_tornado_can_load_bases(harness):
