@@ -29,7 +29,7 @@ setup( author = 'Chad Whitacre'
      , entry_points = {'aspen.renderers' : 'tornado=aspen_tornado_renderer'}
      , py_modules = ['distribute_setup', 'aspen_tornado_renderer']
      , url = 'http://aspen.io/'
-     , version = '0.3'
+     , version = '0.4'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.23'
                           , 'tornado'

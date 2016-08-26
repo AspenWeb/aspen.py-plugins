@@ -30,7 +30,7 @@ setup( author = 'Chad Whitacre'
                       }
      , py_modules = [ 'ez_setup', 'aspen_jinja2_renderer' ]
      , url = 'http://aspen.io/'
-     , version = '0.4'
+     , version = '0.5'
      , zip_safe = False
      , install_requires = [ 'aspen>=0.37'
                           , 'jinja2'
