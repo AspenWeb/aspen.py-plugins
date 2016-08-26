@@ -4,3 +4,6 @@ build
 dist
 *.egg-info
 distribute_setup.py
+.tox/
+.cache/
+.coverage
