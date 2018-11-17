@@ -10,7 +10,7 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 
-from aspen import renderers
+from aspen.simplates import renderers
 from jinja2 import BaseLoader, Environment, FileSystemLoader
 
 

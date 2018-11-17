@@ -1,6 +1,6 @@
 
 from __future__ import absolute_import
-from aspen import renderers
+from aspen.simplates import renderers
 import pystache
 
 
