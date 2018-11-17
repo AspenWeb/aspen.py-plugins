@@ -88,8 +88,12 @@ class Factory(renderers.Factory):
         if configuration.project_root is not None:
             # Instantiate a loader that will be used to resolve template bases.
             loader = FileSystemLoader(configuration.project_root)
+        common_options = dict(
+            loader=loader,
+            auto_reload=configuration.changes_reload,
+        )
         return {
-            'default_env': Environment(loader=loader),
-            'htmlescaped_env': Environment(loader=loader, autoescape=True),
+            'default_env': Environment(**common_options),
+            'htmlescaped_env': Environment(autoescape=True, **common_options),
         }
 
