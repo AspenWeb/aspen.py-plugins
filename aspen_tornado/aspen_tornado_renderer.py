@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from aspen import renderers
+from aspen.simplates import renderers
 from tornado.template import Loader, Template
 import os
 
